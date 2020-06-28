@@ -25,6 +25,9 @@ async def on_message( message ):
 
 
 #Переменные
+TOKEN = 'NzI0OTY3NjMxNDcxMzc4NDg0.Xvh6Vg.zOsKJF549-oxks2LdTrgG74y7y4'
+ID = 724967631471378484
+
 id_connect_server = 482502913743257600 #Канал для отображения присоединения на сервер
 
 insufficient_rights = 'У вас недостаточно прав на выполнение этой команды!'
