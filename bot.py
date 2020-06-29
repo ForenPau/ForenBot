@@ -12,15 +12,9 @@ async def on_command_error( ctx, error ):
 
 @client.event
 async def on_ready():
-    print( 'Bot connected' )
+    print( 'Bot connected v1.0.1' )
 
     await client.change_presence( status = discord.Status.online, activity = discord.Game( '{}help'.format( PREFIX ) ) )
-
-@client.event
-
-async def on_message( message ):
-    await client.process_commands( message )
-    msg = message.content.lower()
 
 
 
@@ -31,8 +25,8 @@ ID = 724967631471378484
 id_connect_server = 482502913743257600 #Канал для отображения присоединения на сервер
 
 insufficient_rights = 'У вас недостаточно прав на выполнение этой команды!'
+insufficient_rights_error = discord.Embed( description = insufficient_rights, colour = discord.Color.red() )
 bad_words = [ 'тест' ]
-
 
 
 
@@ -41,15 +35,14 @@ bad_words = [ 'тест' ]
 @commands.has_permissions( administrator = True )
 
 async def clear( ctx, amount = 1 ):
-    await ctx.channel.purge( limit = amount )
+    await ctx.channel.purge( limit = amount+1 )
 
     await ctx.send( embed = discord.Embed( description = f':white_check_mark: Удалено {amount} сообщений', colour = discord.Color.green() ) )
 
 @clear.error
 async def clear_error( ctx, error ):
     if isinstance( error, commands.MissingPermissions ):
-        emb = discord.Embed( description = insufficient_rights, colour = discord.Color.red() )
-        await ctx.send( embed = emb )
+        await ctx.send( embed = insufficient_rights_error )
 
     if isinstance( error, commands.MissingRequiredArgument ):
         await ctx.send( '```{}clear [кол-во] - очистить сообщения```'.format( PREFIX ) )
@@ -61,17 +54,21 @@ async def clear_error( ctx, error ):
 @commands.has_permissions( administrator = True )
 
 async def kick( ctx, member: discord.Member, *, reason = None ):
-    await ctx.channel.purge( limit = 1 )
 
     if reason == None:
-        reason = 'Без причины'
+        emb = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи причину!', colour = discord.Color.red() )
+        await ctx.send( embed = emb )
+        return
 
     if member == None or member == ctx.message.author:
         emb = discord.Embed( description = f'{ member.mention }, вы не можете кикнуть самого себя', colour = discord.Color.red() )
         await ctx.send( embed = emb )
         return
 
-    await member.send( f'Вы были исключены из **Foren Server** администратором { ctx.author.name } ```Причина: { reason }```' )
+    await ctx.channel.purge( limit = 1 )
+
+    embb = discord.Embed( description = f'Вы были исключены из **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```', color = 0x0080ff )
+    await member.send( embed = embb )
 
     await member.kick( reason = reason )
 
@@ -87,8 +84,7 @@ async def kick( ctx, member: discord.Member, *, reason = None ):
 @kick.error
 async def kick_error( ctx, error ):
     if isinstance( error, commands.MissingPermissions ):
-        emb = discord.Embed( description = insufficient_rights, colour = discord.Color.red() )
-        await ctx.send( embed = emb )
+        await ctx.send( embed = insufficient_rights_error )
 
     if isinstance( error, commands.MissingRequiredArgument ):
         await ctx.send( '```{}kick [@участник] (причина) - кикнуть с сервера```'.format( PREFIX ) )
@@ -100,17 +96,21 @@ async def kick_error( ctx, error ):
 @commands.has_permissions( administrator = True )
 
 async def ban( ctx, member: discord.Member, *, reason = None ):
-    await ctx.channel.purge( limit = 1 )
 
     if reason == None:
-        reason = 'Без причины'
+        emb = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи причину!', colour = discord.Color.red() )
+        await ctx.send( embed = emb )
+        return
 
     if member == None or member == ctx.message.author:
         emb = discord.Embed( description = f'{ member.mention }, вы не можете забанить самого себя', colour = discord.Color.red() )
         await ctx.send( embed = emb )
         return
 
-    await member.send( f'Вы были забанены на **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```' )
+    await ctx.channel.purge( limit = 1 )
+
+    embb = discord.Embed( description = f'Вы были забанены на **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```', color = 0xff0000 )
+    await member.send( embed = embb )
 
     await member.ban( reason = reason )
 
@@ -127,8 +127,7 @@ async def ban( ctx, member: discord.Member, *, reason = None ):
 @ban.error
 async def ban_error( ctx, error ):
     if isinstance( error, commands.MissingPermissions ):
-        emb = discord.Embed( description = insufficient_rights, colour = discord.Color.red() )
-        await ctx.send( embed = emb )
+        await ctx.send( embed = insufficient_rights_error )
 
     if isinstance( error, commands.MissingRequiredArgument ):
         await ctx.send( '```{}ban [@участник] (причина) - забанить навсегда```'.format( PREFIX ) )
@@ -150,7 +149,7 @@ async def unban( ctx, *, member ):
 
         await ctx.send( f'Разбанен { user.mention }' )
 
-        embed = discord.Embed( color = 0xff0000 )
+        embed = discord.Embed( color = 0x00ff00 )
         embed.set_author( name = member.name, icon_url = member.avatar_url )
         embed.add_field( name = "Пользователь", value = format( member.mention ), inline = False )
         embed.add_field( name = "Модератор", value = format( ctx.author.name ), inline = False )
@@ -163,8 +162,7 @@ async def unban( ctx, *, member ):
 @unban.error
 async def unban_error( ctx, error ):
     if isinstance( error, commands.MissingPermissions ):
-        emb = discord.Embed( description = insufficient_rights, colour = discord.Color.red() )
-        await ctx.send( embed = emb )
+        await ctx.send( embed = insufficient_rights_error )
 
     if isinstance( error, commands.MissingRequiredArgument ):
         await ctx.send( '```{}unban [участник#0000] - разбанить```'.format( PREFIX ) )
@@ -183,7 +181,8 @@ async def warn( ctx, member: discord.Member ):
         await ctx.send( embed = emb )
         return
 
-    await member.send( f'Вы были предупреждены на **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```' )
+    embb = discord.Embed( description = f'Вы были предупреждены на **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```', color = 0xffff00 )
+    await member.send( embed = embb )
 
     embed = discord.Embed( color = 0xffff00 )
     embed.set_author( name = member.name, icon_url = member.avatar_url )
@@ -197,8 +196,7 @@ async def warn( ctx, member: discord.Member ):
 @warn.error
 async def warn_error( ctx, error ):
     if isinstance( error, commands.MissingPermissions ):
-        emb = discord.Embed( description = insufficient_rights, colour = discord.Color.red() )
-        await ctx.send( embed = emb )
+        await ctx.send( embed = insufficient_rights_error )
 
     if isinstance( error, commands.MissingRequiredArgument ):
         await ctx.send( '```{}warn [@участник] (причина) - предупредить```'.format( PREFIX ) )
@@ -220,13 +218,17 @@ async def mute( ctx, member: discord.Member ):
     mute_role = discord.utils.get( ctx.message.guild.roles, name = 'Mute' )
 
     await member.add_roles( mute_role )
-    await ctx.send( f'У { member.mention }, ограничение чата, за нарушение прав!' )
+
+    emb = discord.Embed( description = f'У { member.mention } ограничение чата за нарушение прав!', color = 0xff0000 )
+    await ctx.send( embed = emb )
+
+    embed = discord.Embed( description = f'У вас ограничение чата на **Foren Server**', color = 0xff0000 )
+    await member.send( embed = embed )
 
 @mute.error
 async def mute_error( ctx, error ):
     if isinstance( error, commands.MissingPermissions ):
-        emb = discord.Embed( description = insufficient_rights, colour = discord.Color.red() )
-        await ctx.send( embed = emb )
+        await ctx.send( embed = insufficient_rights_error )
 
     if isinstance( error, commands.MissingRequiredArgument ):
         await ctx.send( '```{}mute [@участник] (причина) - замутить```'.format( PREFIX ) )
@@ -239,14 +241,14 @@ async def mute_error( ctx, error ):
 async def on_member_join( member ):
     channel = client.get_channel( id_connect_server )
 
-    await member.send(
-    '''
-Приветик!
-Спасибо что заглянул на **Foren Server**.
-Чувствуй себя как дома, только не нарушай правила.
-Держи печеньку 🍪
-    '''
-    )
+    emb = discord.Embed( description = '''
+    Приветик!
+    Спасибо что заглянул на **Foren Server**.
+    Чувствуй себя как дома, только не нарушай правила.
+    Держи печеньку 🍪
+    ''', color = 0xff8000 )
+
+    await member.send( embed = emb )
 
     await channel.send( embed = discord.Embed( description = f'Пользователь { member.mention }, присоединился к нам!', color = 0xff8000 ) )
 
