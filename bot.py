@@ -57,9 +57,6 @@ async def clear_error( ctx, error ):
         await ctx.channel.purge( limit = 1 )
         await ctx.send( embed = insufficient_rights_error, delete_after = 3 )
 
-    if isinstance( error, commands.MissingRequiredArgument ):
-        await ctx.send( '```{}clear [кол-во] - очистить сообщения```'.format( PREFIX ), delete_after = 5 )
-
 
 
 #Кик
@@ -67,25 +64,24 @@ async def clear_error( ctx, error ):
 @commands.has_permissions( administrator = True )
 
 async def kick( ctx, member: discord.Member, *, reason = None ):
+    await ctx.channel.purge( limit = 1 )
 
     if reason == None:
-        await ctx.send( embed = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи причину!', colour = discord.Color.red() ), delete_after = 5 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention }, обязательно укажи причину!', colour = discord.Color.red() ), delete_after = 5 )
         return
 
     if member == None or member == ctx.message.author:
         await ctx.send( embed = discord.Embed( description = f'{ member.mention }, вы не можете кикнуть самого себя', colour = discord.Color.red() ), delete_after = 5 )
         return
 
-    await ctx.channel.purge( limit = 1 )
-
-    await member.send( embed = discord.Embed( description = f'Вы были исключены из **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```', color = color_kick ) )
+    await member.send( embed = discord.Embed( description = f'Вы были исключены из **Foren Server** администратором **{ ctx.author.mention }** ```Причина: { reason }```', color = color_kick ) )
 
     await member.kick( reason = reason )
 
     embed = discord.Embed( color = color_kick )
     embed.set_author( name = member.name, icon_url = member.avatar_url )
     embed.add_field( name = "Пользователь", value = format( member.mention ), inline = False )
-    embed.add_field( name = "Модератор", value = format( ctx.author.name ), inline = False )
+    embed.add_field( name = "Администратор", value = format( ctx.message.author.mention ), inline = False )
     embed.add_field( name = "Причина", value = reason, inline = False )
     embed.set_footer( text= f"Исключён администратором { ctx.author.name }", icon_url = ctx.author.avatar_url )
 
@@ -108,6 +104,7 @@ async def kick_error( ctx, error ):
 @commands.has_permissions( administrator = True )
 
 async def ban( ctx, member: discord.Member, *, reason = None ):
+    await ctx.channel.purge( limit = 1 )
 
     if reason == None:
         await ctx.send( embed = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи причину!', colour = discord.Color.red() ), delete_after = 5 )
@@ -117,16 +114,14 @@ async def ban( ctx, member: discord.Member, *, reason = None ):
         await ctx.send( embed = discord.Embed( description = f'{ member.mention }, вы не можете заблокировать самого себя', colour = discord.Color.red() ), delete_after = 5 )
         return
 
-    await ctx.channel.purge( limit = 1 )
-
     await member.ban( reason = reason )
 
-    await member.send( embed = discord.Embed( description = f'Вы были заблокированы на **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```', color = color_ban ) )
+    await member.send( embed = discord.Embed( description = f'Вы были заблокированы на **Foren Server** администратором **{ ctx.author.mention }** ```Причина: { reason }```', color = color_ban ) )
 
     embed = discord.Embed( color = color_ban )
     embed.set_author( name = member.name, icon_url = member.avatar_url )
     embed.add_field( name = "Пользователь", value = format( member.mention ), inline = False )
-    embed.add_field( name = "Администратор", value = format( ctx.author.name ), inline = False )
+    embed.add_field( name = "Администратор", value = format( ctx.message.author.mention ), inline = False )
     embed.add_field( name = "Причина", value = reason, inline = False )
     embed.add_field( name = "Длительность", value = "∞", inline = False )
     embed.set_footer( text= f"Заблокирован администратором { ctx.author.name }", icon_url = ctx.author.avatar_url )
@@ -148,7 +143,7 @@ async def ban_error( ctx, error ):
 @client.command()
 @commands.has_permissions( administrator = True )
 
-async def unban( ctx, *, member ):
+async def unban( ctx, *, member: discord.Member ):
     await ctx.channel.purge( limit = 1 )
 
     banned_users = await ctx.guild.bans()
@@ -163,7 +158,7 @@ async def unban( ctx, *, member ):
         embed = discord.Embed( color = color_unban )
         embed.set_author( name = member.name, icon_url = member.avatar_url )
         embed.add_field( name = "Пользователь", value = format( member.mention ), inline = False )
-        embed.add_field( name = "Администратор", value = format( ctx.author.name ), inline = False )
+        embed.add_field( name = "Администратор", value = format( ctx.message.author.mention ), inline = False )
         embed.set_footer( text= f"Был разбанен администратором { ctx.author.name }", icon_url = ctx.author.avatar_url )
 
         await ctx.send( embed = embed )
@@ -195,7 +190,7 @@ async def warn( ctx, member: discord.Member, *, reason ):
 
     await ctx.sent( embed = discord.Embed( description = f'{ member.mention } вы были предупреждены ```Причина: { reason }```', color = color_warn ) )
 
-    await member.send( embed = discord.Embed( description = f'Вы были предупреждены на **Foren Server** администратором **{ ctx.author.name }** ```Причина: { reason }```', color = color_warn ) )
+    await member.send( embed = discord.Embed( description = f'Вы были предупреждены на **Foren Server** администратором **{ ctx.author.mention }** ```Причина: { reason }```', color = color_warn ) )
 
     #embed = discord.Embed( color = color_warn )
     #embed.set_author( name = member.name, icon_url = member.avatar_url )
@@ -230,11 +225,11 @@ async def tempban( ctx, member: discord.Member, time: int, *, reason ):
         return
 
     if time == None or 0:
-        await ctx.send( embed = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи время!', colour = discord.Color.red() ), delete_after = 5 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention }, обязательно укажи время!', colour = discord.Color.red() ), delete_after = 5 )
         return
 
     if reason == None:
-        await ctx.send( embed = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи причину!', colour = discord.Color.red() ), delete_after = 5 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention }, обязательно укажи причину!', colour = discord.Color.red() ), delete_after = 5 )
         return
 
     await member.add_roles( discord.utils.get( ctx.message.guild.roles, id = role_banned ) )
@@ -277,11 +272,11 @@ async def mute( ctx, member: discord.Member, time: int, *, reason ):
         return
 
     if time == None or 0:
-        await ctx.send( embed = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи время!', colour = discord.Color.red() ), delete_after = 5 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention }, обязательно укажи время!', colour = discord.Color.red() ), delete_after = 5 )
         return
 
     if reason == None:
-        await ctx.send( embed = discord.Embed( description = f'{ ctx.author.name }, обязательно укажи причину!', colour = discord.Color.red() ), delete_after = 5 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention }, обязательно укажи причину!', colour = discord.Color.red() ), delete_after = 5 )
         return
 
     await member.add_roles( discord.utils.get( ctx.message.guild.roles, id = role_muted ) )
@@ -345,6 +340,8 @@ async def unmute_error( ctx, error ):
 @client.command()
 
 async def info( ctx, *, user: discord.User ):
+    await ctx.channel.purge( limit = 1 )
+    
     emb = discord.Embed( color = color_main )
     emb.add_field( name = "Имя", value = user.name, inline = False )
     emb.add_field( name = "ID", value = user.id, inline = False )
@@ -384,7 +381,16 @@ async def on_message( message ):
 
     if msg in bad_words:
         await message.delete()
-        await message.author.send( embed = discord.Embed( description = 'Не надо такое писать!', color = color_warn ), delete_after = 10 )
+        await message.author.send( embed = discord.Embed( description = 'Не надо такое писать! ```Сообщение: {  }```', color = color_warn ), delete_after = 10 )
+
+
+
+#Команды не существует
+@client.event
+async def on_command_error( ctx, error ):
+    #await ctx.channel.purge( limit = 1 ) #ОШИБКА С КОМАНДАМИ
+    if isinstance( error, commands.CommandNotFound ):
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention }, данной команды не существует!', colour = discord.Color.red() ), delete_after = 3 )
 
 
 
