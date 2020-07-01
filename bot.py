@@ -245,7 +245,7 @@ async def warn_error( ctx, error ):
 @client.command( aliases = [ 'tempban', 'темпбан', 'временныйбан' ] )
 @commands.has_permissions( administrator = True )
 
-async def __tempban( ctx, member: discord.Member, time: int, *, reason ):
+async def __tempban( ctx, member: discord.Member, time = None, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
     if member == None or member == ctx.message.author:
@@ -292,7 +292,7 @@ async def tempban_error( ctx, error ):
 @client.command( aliases = [ 'mute', 'мут', 'заглушить', 'замутить' ] )
 @commands.has_permissions( administrator = True )
 
-async def __mute( ctx, member: discord.Member, time: int, *, reason ):
+async def __mute( ctx, member: discord.Member, time = None, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
     if member == None or member == ctx.message.author:
@@ -367,47 +367,80 @@ async def unmute_error( ctx, error ):
 #Бот который кусает и целует
 @client.command( aliases = [ 'кусь', 'укусить', 'куснуть' ] )
 
-async def __ukus( ctx, member: discord.Member ):
+async def __ukus( ctx, member: discord.Member, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
-    if member == None or member == ctx.message.author:
+    if member == member == ctx.message.author and reason == None:
         await ctx.send( embed = discord.Embed( description = f':grin: { member.mention } укусил(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f':grin: { ctx.message.author.mention } укусил(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f':grin: Тебя укусил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    if member == member == ctx.message.author:
+        await ctx.send( embed = discord.Embed( description = f':grin: { member.mention } укусил(а) себя со словами: **{ reason }**', color = color_kus ) )
+        return
+
+    if reason == None:
+        await ctx.send( embed = discord.Embed( description = f':grin: { ctx.message.author.mention } укусил(а) { member.mention }', color = color_kus ) )
+        await member.send( embed = discord.Embed( description = f':grin: Тебя укусил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+        return
+
+    await ctx.send( embed = discord.Embed( description = f':grin: { ctx.message.author.mention } укусил(а) { member.mention } со словами: **{ reason }**', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':grin: Тебя укусил(а) { ctx.message.author.mention } со словами: **{ reason }**', color = color_kus ), delete_after = 60 )
 
 @__ukus.error
 async def __ukus_error( ctx, error ):
     if isinstance( error, commands.MissingRequiredArgument ):
         await ctx.channel.purge( limit = 1 )
-        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } обязательно укажите участника!', colour = discord.Color.red() ), delete_after = 1 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } обязательно укажи участника!', colour = discord.Color.red() ), delete_after = 2 )
 
 
 @client.command( aliases = [ 'поцеловать', 'цьом', 'чмок' ] )
 
-async def __pocelui( ctx, member: discord.Member ):
+async def __pocelui( ctx, member: discord.Member, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
-    if member == None or member == ctx.message.author:
+    if member == member == ctx.message.author and reason == None:
         await ctx.send( embed = discord.Embed( description = f':kissing_heart: :kiss: { member.mention } поцеловал(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f':kissing_heart: :kiss: { ctx.message.author.mention } поцеловал(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f':kissing_heart: :kiss: Тебя поцеловал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    if member == member == ctx.message.author:
+        await ctx.send( embed = discord.Embed( description = f':kissing_heart: :kiss: { member.mention } поцеловал(а) себя со словами: **{ reason }**', color = color_kus ) )
+        return
+
+    if reason == None:
+        await ctx.send( embed = discord.Embed( description = f':kissing_heart: :kiss: { ctx.message.author.mention } поцеловал(а) { member.mention }', color = color_kus ) )
+        await member.send( embed = discord.Embed( description = f':kissing_heart: :kiss: Тебя поцеловал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+        return
+
+    await ctx.send( embed = discord.Embed( description = f':kissing_heart: :kiss: { ctx.message.author.mention } поцеловал(а) { member.mention } со словами: **{ reason }**', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':kissing_heart: :kiss: Тебя поцеловал(а) { ctx.message.author.mention } со словами: **{ reason }**', color = color_kus ), delete_after = 60 )
+
+@__pocelui.error
+async def __pocelui_error( ctx, error ):
+    if isinstance( error, commands.MissingRequiredArgument ):
+        await ctx.channel.purge( limit = 1 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } обязательно укажи участника!', colour = discord.Color.red() ), delete_after = 2 )
 
 
 @client.command( aliases = [ 'ударить', 'втащить', 'ушатать' ] )
 
-async def __udarit( ctx, member: discord.Member ):
+async def __udarit( ctx, member: discord.Member, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
-    if member == None or member == ctx.message.author:
+    if member == member == ctx.message.author and reason == None:
         await ctx.send( embed = discord.Embed( description = f':punch: :rage: { member.mention } ударил(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f':punch: :rage: { ctx.message.author.mention } ударил(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f':punch: :rage: Тебя ударил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    if member == member == ctx.message.author:
+        await ctx.send( embed = discord.Embed( description = f':punch: :rage: { member.mention } ударил(а) себя со словами: **{ reason }**', color = color_kus ) )
+        return
+
+    if reason == None:
+        await ctx.send( embed = discord.Embed( description = f':punch: :rage: { ctx.message.author.mention } ударил(а) { member.mention }', color = color_kus ) )
+        await member.send( embed = discord.Embed( description = f':punch: :rage: Ударил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+        return
+
+    await ctx.send( embed = discord.Embed( description = f':punch: :rage: { ctx.message.author.mention } ударил(а) { member.mention } со словами: **{ reason }**', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':punch: :rage: Тебя ударил(а) { ctx.message.author.mention } со словами: **{ reason }**', color = color_kus ), delete_after = 60 )
 
 @__udarit.error
 async def __udarit_error( ctx, error ):
@@ -418,15 +451,24 @@ async def __udarit_error( ctx, error ):
 
 @client.command( aliases = [ 'облизать', 'лизь', 'лизнуть' ] )
 
-async def __oblizal( ctx, member: discord.Member ):
+async def __oblizal( ctx, member: discord.Member, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
-    if member == None or member == ctx.message.author:
+    if member == member == ctx.message.author and reason == None:
         await ctx.send( embed = discord.Embed( description = f':tongue: { member.mention } облизал(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f':tongue: { ctx.message.author.mention } облизал(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f':tongue: Тебя облизал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    if member == member == ctx.message.author:
+        await ctx.send( embed = discord.Embed( description = f':tongue: { member.mention } облизал(а) себя со словами: **{ reason }**', color = color_kus ) )
+        return
+
+    if reason == None:
+        await ctx.send( embed = discord.Embed( description = f':tongue: { ctx.message.author.mention } облизал(а) { member.mention }', color = color_kus ) )
+        await member.send( embed = discord.Embed( description = f':tongue: Тебя облизал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+        return
+
+    await ctx.send( embed = discord.Embed( description = f':tongue: { ctx.message.author.mention } облизал(а) { member.mention } со словами: **{ reason }**', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':tongue: Тебя облизал(а) { ctx.message.author.mention } со словами: **{ reason }**', color = color_kus ), delete_after = 60 )
 
 @__oblizal.error
 async def __oblizal_error( ctx, error ):
@@ -437,15 +479,24 @@ async def __oblizal_error( ctx, error ):
 
 @client.command( aliases = [ 'шлепнуть', 'шлёпнуть', 'отшлёпать', 'отшлепать', 'шлепок' ] )
 
-async def __shlepok( ctx, member: discord.Member ):
+async def __shlepok( ctx, member: discord.Member, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
-    if member == None or member == ctx.message.author:
+    if member == member == ctx.message.author and reason == None:
         await ctx.send( embed = discord.Embed( description = f':clap: { member.mention } шлёпнул(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f':clap: { ctx.message.author.mention } шлёпнул(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f':clap: Тебя шлёпнул(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    if member == member == ctx.message.author:
+        await ctx.send( embed = discord.Embed( description = f':clap: { member.mention } шлёпнул(а) себя со словами: **{ reason }**', color = color_kus ) )
+        return
+
+    if reason == None:
+        await ctx.send( embed = discord.Embed( description = f':clap: { ctx.message.author.mention } шлёпнул(а) { member.mention }', color = color_kus ) )
+        await member.send( embed = discord.Embed( description = f':clap: Тебя шлёпнул(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+        return
+
+    await ctx.send( embed = discord.Embed( description = f':clap: { ctx.message.author.mention } шлёпнул(а) { member.mention } со словами: **{ reason }**', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':clap: Тебя шлёпнул(а) { ctx.message.author.mention } со словами: **{ reason }**', color = color_kus ), delete_after = 60 )
 
 @__shlepok.error
 async def __shlepok_error( ctx, error ):
