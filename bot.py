@@ -427,20 +427,20 @@ async def __udarit( ctx, member: discord.Member, *, reason = None ):
     await ctx.channel.purge( limit = 1 )
 
     if member == member == ctx.message.author and reason == None:
-        await ctx.send( embed = discord.Embed( description = f':punch: :rage: { member.mention } ударил(а) себя', color = color_kus ) )
+        await ctx.send( embed = discord.Embed( description = f':punch: { member.mention } ударил(а) себя', color = color_kus ) )
         return
 
     if member == member == ctx.message.author:
-        await ctx.send( embed = discord.Embed( description = f':punch: :rage: { member.mention } ударил(а) себя со словами: **{ reason }**', color = color_kus ) )
+        await ctx.send( embed = discord.Embed( description = f':punch: { member.mention } ударил(а) себя со словами: **{ reason }**', color = color_kus ) )
         return
 
     if reason == None:
-        await ctx.send( embed = discord.Embed( description = f':punch: :rage: { ctx.message.author.mention } ударил(а) { member.mention }', color = color_kus ) )
-        await member.send( embed = discord.Embed( description = f':punch: :rage: Ударил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+        await ctx.send( embed = discord.Embed( description = f':punch: { ctx.message.author.mention } ударил(а) { member.mention }', color = color_kus ) )
+        await member.send( embed = discord.Embed( description = f':punch: Ударил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
         return
 
-    await ctx.send( embed = discord.Embed( description = f':punch: :rage: { ctx.message.author.mention } ударил(а) { member.mention } со словами: **{ reason }**', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f':punch: :rage: Тебя ударил(а) { ctx.message.author.mention } со словами: **{ reason }**', color = color_kus ), delete_after = 60 )
+    await ctx.send( embed = discord.Embed( description = f':punch: { ctx.message.author.mention } ударил(а) { member.mention } со словами: **{ reason }**', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':punch: Тебя ударил(а) { ctx.message.author.mention } со словами: **{ reason }**', color = color_kus ), delete_after = 60 )
 
 @__udarit.error
 async def __udarit_error( ctx, error ):
