@@ -371,11 +371,11 @@ async def __ukus( ctx, member: discord.Member ):
     await ctx.channel.purge( limit = 1 )
 
     if member == None or member == ctx.message.author:
-        await ctx.send( embed = discord.Embed( description = f'{ member.mention } укусил(а) себя', color = color_kus ) )
+        await ctx.send( embed = discord.Embed( description = f':grin: { member.mention } укусил(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } укусил(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f'Тебя укусил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    await ctx.send( embed = discord.Embed( description = f':grin: { ctx.message.author.mention } укусил(а) { member.mention }', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':grin: Тебя укусил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
 
 
 @client.command( aliases = [ 'поцеловать', 'цьом', 'чмок' ] )
@@ -384,11 +384,11 @@ async def __pocelui( ctx, member: discord.Member ):
     await ctx.channel.purge( limit = 1 )
 
     if member == None or member == ctx.message.author:
-        await ctx.send( embed = discord.Embed( description = f'{ member.mention } поцеловал(а) себя', color = color_kus ) )
+        await ctx.send( embed = discord.Embed( description = f':kissing_heart: :kiss: { member.mention } поцеловал(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } поцеловал(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f'Тебя поцеловал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    await ctx.send( embed = discord.Embed( description = f':kissing_heart: :kiss: { ctx.message.author.mention } поцеловал(а) { member.mention }', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':kissing_heart: :kiss: Тебя поцеловал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
 
 
 @client.command( aliases = [ 'ударить', 'втащить', 'ушатать' ] )
@@ -397,11 +397,11 @@ async def __udarit( ctx, member: discord.Member ):
     await ctx.channel.purge( limit = 1 )
 
     if member == None or member == ctx.message.author:
-        await ctx.send( embed = discord.Embed( description = f'{ member.mention } ударил(а) себя', color = color_kus ) )
+        await ctx.send( embed = discord.Embed( description = f':punch: :rage: { member.mention } ударил(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } ударил(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f'Тебя ударил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    await ctx.send( embed = discord.Embed( description = f':punch: :rage: { ctx.message.author.mention } ударил(а) { member.mention }', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':punch: :rage: Тебя ударил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
 
 
 @client.command( aliases = [ 'облизать', 'лизь', 'лизнуть' ] )
@@ -410,11 +410,24 @@ async def __oblizal( ctx, member: discord.Member ):
     await ctx.channel.purge( limit = 1 )
 
     if member == None or member == ctx.message.author:
-        await ctx.send( embed = discord.Embed( description = f'{ member.mention } облизал(а) себя', color = color_kus ) )
+        await ctx.send( embed = discord.Embed( description = f':tongue: { member.mention } облизал(а) себя', color = color_kus ) )
         return
 
-    await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } облизал(а) { member.mention }', color = color_kus ) )
-    await member.send( embed = discord.Embed( description = f'Тебя облизал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+    await ctx.send( embed = discord.Embed( description = f':tongue: { ctx.message.author.mention } облизал(а) { member.mention }', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':tongue: Тебя облизал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+
+
+@client.command( aliases = [ 'шлепнуть', 'шлёпнуть', 'отшлёпать', 'отшлепать' ] )
+
+async def __shlepok( ctx, member: discord.Member ):
+    await ctx.channel.purge( limit = 1 )
+
+    if member == None or member == ctx.message.author:
+        await ctx.send( embed = discord.Embed( description = f':clap: { member.mention } шлёпнул(а) себя', color = color_kus ) )
+        return
+
+    await ctx.send( embed = discord.Embed( description = f':clap: { ctx.message.author.mention } шлёпнул(а) { member.mention }', color = color_kus ) )
+    await member.send( embed = discord.Embed( description = f':clap: Тебя шлёпнул(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
 
 
 
@@ -666,7 +679,7 @@ async def __help( ctx ):
 
     emb.add_field( name = '{}help-moder'.format( PREFIX ), value = 'Команды для модерации', inline = False )
     emb.add_field( name = '{}help-eco'.format( PREFIX ), value = 'Команды экономического бота', inline = False )
-    #emb.add_field( name = '{}help-chat'.format( PREFIX ), value = 'Кикнуть участника', inline = False )
+    emb.add_field( name = '{}help-chat'.format( PREFIX ), value = 'Кикнуть участника', inline = False )
 
     await ctx.send( embed = emb )
 
@@ -699,6 +712,20 @@ async def __help_eco( ctx ):
     emb.add_field( name = '{}balance'.format( PREFIX ), value = 'Баланс', inline = False )
     emb.add_field( name = '{}award'.format( PREFIX ), value = 'Дать деньги', inline = False )
     emb.add_field( name = '{}buy'.format( PREFIX ), value = 'Купить роль в магазине', inline = False )
+
+    await ctx.send( embed = emb )
+
+
+@client.command( aliases = [ 'help-chat' ] )
+
+async def __help_chat( ctx ):
+    emb = discord.Embed( title = 'Помощь для чата', color = color_main )
+
+    emb.add_field( name = '{}укусить'.format( PREFIX ), value = 'Крутая команда!', inline = False )
+    emb.add_field( name = '{}поцеловать'.format( PREFIX ), value = 'Крутая команда!', inline = False )
+    emb.add_field( name = '{}ударить'.format( PREFIX ), value = 'Крутая команда!', inline = False )
+    emb.add_field( name = '{}облизать'.format( PREFIX ), value = 'Крутая команда!', inline = False )
+    emb.add_field( name = '{}шлепнуть'.format( PREFIX ), value = 'Крутая команда!', inline = False )
 
     await ctx.send( embed = emb )
 
