@@ -377,6 +377,12 @@ async def __ukus( ctx, member: discord.Member ):
     await ctx.send( embed = discord.Embed( description = f':grin: { ctx.message.author.mention } укусил(а) { member.mention }', color = color_kus ) )
     await member.send( embed = discord.Embed( description = f':grin: Тебя укусил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
 
+@__ukus.error
+async def __ukus_error( ctx, error ):
+    if isinstance( error, commands.MissingRequiredArgument ):
+        await ctx.channel.purge( limit = 1 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } обязательно укажите участника!', colour = discord.Color.red() ), delete_after = 1 )
+
 
 @client.command( aliases = [ 'поцеловать', 'цьом', 'чмок' ] )
 
@@ -403,6 +409,12 @@ async def __udarit( ctx, member: discord.Member ):
     await ctx.send( embed = discord.Embed( description = f':punch: :rage: { ctx.message.author.mention } ударил(а) { member.mention }', color = color_kus ) )
     await member.send( embed = discord.Embed( description = f':punch: :rage: Тебя ударил(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
 
+@__udarit.error
+async def __udarit_error( ctx, error ):
+    if isinstance( error, commands.MissingRequiredArgument ):
+        await ctx.channel.purge( limit = 1 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } обязательно укажите участника!', colour = discord.Color.red() ), delete_after = 1 )
+
 
 @client.command( aliases = [ 'облизать', 'лизь', 'лизнуть' ] )
 
@@ -416,8 +428,14 @@ async def __oblizal( ctx, member: discord.Member ):
     await ctx.send( embed = discord.Embed( description = f':tongue: { ctx.message.author.mention } облизал(а) { member.mention }', color = color_kus ) )
     await member.send( embed = discord.Embed( description = f':tongue: Тебя облизал(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
 
+@__oblizal.error
+async def __oblizal_error( ctx, error ):
+    if isinstance( error, commands.MissingRequiredArgument ):
+        await ctx.channel.purge( limit = 1 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } обязательно укажите участника!', colour = discord.Color.red() ), delete_after = 1 )
 
-@client.command( aliases = [ 'шлепнуть', 'шлёпнуть', 'отшлёпать', 'отшлепать' ] )
+
+@client.command( aliases = [ 'шлепнуть', 'шлёпнуть', 'отшлёпать', 'отшлепать', 'шлепок' ] )
 
 async def __shlepok( ctx, member: discord.Member ):
     await ctx.channel.purge( limit = 1 )
@@ -428,6 +446,12 @@ async def __shlepok( ctx, member: discord.Member ):
 
     await ctx.send( embed = discord.Embed( description = f':clap: { ctx.message.author.mention } шлёпнул(а) { member.mention }', color = color_kus ) )
     await member.send( embed = discord.Embed( description = f':clap: Тебя шлёпнул(а) { ctx.message.author.mention }', color = color_kus ), delete_after = 60 )
+
+@__shlepok.error
+async def __shlepok_error( ctx, error ):
+    if isinstance( error, commands.MissingRequiredArgument ):
+        await ctx.channel.purge( limit = 1 )
+        await ctx.send( embed = discord.Embed( description = f'{ ctx.message.author.mention } обязательно укажите участника!', colour = discord.Color.red() ), delete_after = 1 )
 
 
 
@@ -678,8 +702,8 @@ async def __help( ctx ):
     emb = discord.Embed( title = 'Помощь', color = color_main )
 
     emb.add_field( name = '{}help-moder'.format( PREFIX ), value = 'Команды для модерации', inline = False )
-    emb.add_field( name = '{}help-eco'.format( PREFIX ), value = 'Команды экономического бота', inline = False )
-    emb.add_field( name = '{}help-chat'.format( PREFIX ), value = 'Кикнуть участника', inline = False )
+    emb.add_field( name = '{}help-game'.format( PREFIX ), value = 'Помощь по игре', inline = False )
+    emb.add_field( name = '{}help-chat'.format( PREFIX ), value = 'Команды для общения 16+', inline = False )
 
     await ctx.send( embed = emb )
 
@@ -700,18 +724,18 @@ async def __help_moder( ctx ):
     await ctx.send( embed = emb )
 
 
-@client.command( aliases = [ 'help-eco' ] )
+@client.command( aliases = [ 'help-game' ] )
 
-async def __help_eco( ctx ):
-    emb = discord.Embed( title = 'Команды экономического бота', color = color_main )
+async def __help_game( ctx ):
+    emb = discord.Embed( title = 'Помощь по игре', color = color_main )
 
     emb.add_field( name = '{}shop'.format( PREFIX ), value = 'Магазин', inline = False )
-    emb.add_field( name = '{}take'.format( PREFIX ), value = 'Забрать деньги', inline = False )
-    emb.add_field( name = '{}remove-shop'.format( PREFIX ), value = 'Удалить роль из магазина', inline = False )
-    emb.add_field( name = '{}add-shop'.format( PREFIX ), value = 'Добавить роль в магазин', inline = False )
     emb.add_field( name = '{}balance'.format( PREFIX ), value = 'Баланс', inline = False )
-    emb.add_field( name = '{}award'.format( PREFIX ), value = 'Дать деньги', inline = False )
     emb.add_field( name = '{}buy'.format( PREFIX ), value = 'Купить роль в магазине', inline = False )
+    emb.add_field( name = '{}take'.format( PREFIX ), value = 'Забрать деньги (админ)', inline = False )
+    emb.add_field( name = '{}award'.format( PREFIX ), value = 'Дать деньги (админ)', inline = False )
+    emb.add_field( name = '{}remove-shop'.format( PREFIX ), value = 'Удалить роль из магазина (админ)', inline = False )
+    emb.add_field( name = '{}add-shop'.format( PREFIX ), value = 'Добавить роль в магазин (админ)', inline = False )
 
     await ctx.send( embed = emb )
 
@@ -719,7 +743,7 @@ async def __help_eco( ctx ):
 @client.command( aliases = [ 'help-chat' ] )
 
 async def __help_chat( ctx ):
-    emb = discord.Embed( title = 'Помощь для чата', color = color_main )
+    emb = discord.Embed( title = 'Команды для общения 16+', color = color_main )
 
     emb.add_field( name = '{}укусить'.format( PREFIX ), value = 'Крутая команда!', inline = False )
     emb.add_field( name = '{}поцеловать'.format( PREFIX ), value = 'Крутая команда!', inline = False )
