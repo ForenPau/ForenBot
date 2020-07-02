@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 import asyncio
 import sqlite3
-from config import settings
+import os
 
 connection = sqlite3.connect('server.db')
 cursor = connection.cursor()
@@ -978,4 +978,5 @@ async def __help_chat( ctx ):
 
 
 # ПОДКЛЮЧЕНИЕ БОТА
-client.run( settings['TOKEN'] )
+token = os.environ.get( 'TOKEN' )
+client.run( str( token ) )
